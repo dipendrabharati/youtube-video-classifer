@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- <script type="text/javascript" src="background.js" defer></script> -->
+    <title>Popup</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            z-index: 9999; /* Ensure the popup is on top of other elements */
+            position: fixed; /* Fix the position of the popup */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .popup-content {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-content">
+        <h1>Checking if the video belongs to the selected category</h1>
+        <p id="output"> please wait....</p>
+    </div>
+    <script src="content.js"></script>
+</body>
+</html>
