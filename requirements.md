@@ -7,6 +7,6 @@
 6. When the user moves to a different tab making the newly opened tab inactive.
 
 # Obstacles
-1. When the redirects occurs with .Onupdated, it is looping because .Onupdated notices the change in the url. How to prevent that
+1. When the redirects occurs with .Onupdated, it is looping because .Onupdated notices the change in the url. How to prevent that?
 2. Pass tabId to content.js in the backend.
 3. Redirect tab with tabId.

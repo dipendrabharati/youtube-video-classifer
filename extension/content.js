@@ -1,8 +1,10 @@
 //make a request to the backend
-var params = new URLSearchParams(window.location.search);
-var currentUrl = params.get('newurl');
-console.log("making request");
-console.log("url - ", currentUrl);
+let params = new URLSearchParams(window.location.search);
+let currentUrl = params.get('new_url');
+let activeTabId = parseInt(params.get("active_tab"));
+let new_url;
+console.log("Making Request");
+console.log("url - ", currentUrl, " active tab - ", activeTabId);
 const p = document.getElementById("output");
 
 fetch_url = "http://127.0.0.1:5000/summary?url=" + currentUrl;
@@ -36,7 +38,16 @@ fetchData(fetch_url, options)
             p.innerHTML = "Continuing to requested page......"
         }
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            chrome.tabs.update(tabs[0].id, { url: new_url });
+            let currentTab = tabs[0].id;
+            console.log("currentTab - ", typeof(currentTab), "activeTab -", typeof(activeTabId));
+            console.log("new_url ", new_url);
+
+            if (currentTab === activeTabId){
+                console.log("True");
+                chrome.tabs.update(tabs[0].id, { url: new_url });
+            }else{
+                console.log("False");
+            }
         });
     })
     .catch(error => {

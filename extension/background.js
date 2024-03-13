@@ -1,58 +1,28 @@
 chrome.tabs.onCreated.addListener(function(tab) {
-    console.log("Start");
+    console.log("Extension Activated");
 
-    setTimeout(function() {
-    console.log("Waited for 5 seconds");
+    let prev_url;
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        if (tabs.length > 0) {
+            let activeTabId = tabs[0].id;
 
-        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            if (tabs.length > 0) {
-                var currentTab = tabs[0];
-                var currentUrl = currentTab.url;
-                console.log("Current URL:", currentUrl);
+            chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
-                if (currentUrl.includes("www.youtube.com/watch")){
-                    chrome.tabs.update(currentTab.id, { url: "popup.html?newurl=" + currentUrl });
-                }else{
-                    console.log("Current url doesn't contain youtube watch")
+                if (changeInfo.url && tabId === activeTabId) {
+                    console.log('Tab URL changed in the active tab\nCurrent Url:', changeInfo.url);
+                    var currentUrl = changeInfo.url;
+
+                    if (prev_url == null && currentUrl.includes("www.youtube.com/watch")) {
+                        console.log("prev_url -", prev_url, "\ncurrentUrl -", currentUrl);
+                        prev_url = "popup.html?new_url="+currentUrl + "&active_tab=" + activeTabId;
+                        console.log
+                        chrome.tabs.update(activeTabId, { url: prev_url });
+
+                    }else{
+                        console.log("Going through else");
+                    }
                 }
-            }
-        });
-
-    console.log("End");
-    }, 5000);
-
+            });
+        }
+    });
 });
-    // setTimeout(function() {
-    // console.log("Waited for 5 seconds");
-
-    // currentUrl = tab.url;
-    // console.log(currentUrl, tab.id);
-
-    // if (currentUrl.includes("www.youtube.com/watch")) {
-    //     console.log("Inside");
-    // }
-
-    // chrome.tabs.update(tab.id, { url: "popup.html" });
-
-    // console.log("End");
-    // }, 5000);
-    // I want to check if the url of this tab got updated
-
-    // chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-
-    //     if (changeInfo.url) {
-    //         console.log('Tab URL changed Current Url:', changeInfo.url);
-    //         var currentUrl = changeInfo.url;
-
-    //         if (currentUrl.includes("www.youtube.com/watch")) {
-    //             console.log("Inside");
-
-    //             chrome.tabs.update(tabId, { url: "popup.html?newurl="+currentUrl });
-
-    //         }else{
-    //             console.log("Going through else");
-    //         }
-    //     }
-
-    // });
-
