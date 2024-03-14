@@ -1,31 +1,50 @@
 let timerInterval;
+let timeLeft;
+
+document.addEventListener("DOMContentLoaded", function() {
+    chrome.storage.local.get(["timerDuration", "timerTimeLeft"], function(data) {
+        if (data.timerTimeLeft > 0) {
+            timeLeft = data.timerTimeLeft;
+            updateTimerDisplay();
+            startTimer();
+        }
+        document.getElementById("duration").value = data.timerDuration || 10;
+    });
+});
 
 document.getElementById("start").addEventListener("click", function() {
     const duration = parseInt(document.getElementById("duration").value, 10);
-    let timeLeft = duration;
-    console.log("timeleft ", timeLeft);
-    
-    // var dynamicValue = "Hello, world!";
-    // Store the dynamic value in chrome.storage
-    chrome.storage.local.set({ myDynamicValue: duration });
+    timeLeft = duration;
 
-    timerInterval = setInterval(function() {
-        document.getElementById("timerDisplay").textContent = "Time Left: " + timeLeft + " seconds";
-        timeLeft--;
-        // store timeleft
+    chrome.storage.local.set({ timerDuration: duration });
 
-        if (timeLeft < 0) {
-            clearInterval(timerInterval);
-            document.getElementById("timerDisplay").textContent = "Time's up!";
-            document.getElementById("stop").disabled = true;
-        }
-    }, 1000);
-
-    document.getElementById("stop").disabled = false;
+    startTimer();
 });
 
 document.getElementById("stop").addEventListener("click", function() {
     clearInterval(timerInterval);
-    document.getElementById("timerDisplay").textContent = "Timer Stopped";
-    document.getElementById("stop").disabled = true;
+    timeLeft = 0;
+    updateTimerDisplay();
+    chrome.storage.local.set({ timerTimeLeft: 0 });
 });
+
+function startTimer() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(function() {
+        timeLeft--;
+        updateTimerDisplay();
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timeLeft = 0;
+            updateTimerDisplay();
+        }
+
+        chrome.storage.local.set({ timerTimeLeft: timeLeft });
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    document.getElementById("timerDisplay").textContent = "Time Left: " + timeLeft + " seconds";
+    document.getElementById("stop").disabled = timeLeft <= 0;
+}
