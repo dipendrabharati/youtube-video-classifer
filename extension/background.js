@@ -1,3 +1,4 @@
+
 chrome.tabs.onCreated.addListener(function(tab) {
     console.log("Extension Activated");
 
@@ -12,15 +13,15 @@ chrome.tabs.onCreated.addListener(function(tab) {
                     console.log('Tab URL changed in the active tab\nCurrent Url:', changeInfo.url);
                     var currentUrl = changeInfo.url;
 
-                    if (prev_url == null && currentUrl.includes("www.youtube.com/watch")) {
+                    if (prev_url != currentUrl && currentUrl.includes("www.youtube.com/watch")) {
                         console.log("prev_url -", prev_url, "\ncurrentUrl -", currentUrl);
-                        prev_url = "popup.html?new_url="+currentUrl + "&active_tab=" + activeTabId;
-                        console.log
-                        chrome.tabs.update(activeTabId, { url: prev_url });
+                        query_url = "popup.html?new_url="+currentUrl + "&active_tab=" + activeTabId;
+                        chrome.tabs.update(activeTabId, { url: query_url });
 
                     }else{
                         console.log("Going through else");
                     }
+                    prev_url = currentUrl;
                 }
             });
         }

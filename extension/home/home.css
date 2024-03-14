@@ -1,0 +1,14 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.timer {
+    margin-bottom: 10px;
+}
+
+#timerDisplay {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+}

@@ -7,6 +7,12 @@ console.log("Making Request");
 console.log("url - ", currentUrl, " active tab - ", activeTabId);
 const p = document.getElementById("output");
 
+// Retrieve the dynamic value from chrome.storage
+chrome.storage.local.get("myDynamicValue", function(data) {
+    var dynamicValue = data.myDynamicValue;
+    console.log("Duration -", dynamicValue); // Output: "Hello, world!"
+});
+
 fetch_url = "http://127.0.0.1:5000/summary?url=" + currentUrl;
 
 const options = { method: "GET" };
@@ -37,17 +43,20 @@ fetchData(fetch_url, options)
             console.log("new_url - ", new_url);
             p.innerHTML = "Continuing to requested page......"
         }
-        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            let currentTab = tabs[0].id;
-            console.log("currentTab - ", typeof(currentTab), "activeTab -", typeof(activeTabId));
-            console.log("new_url ", new_url);
-
-            if (currentTab === activeTabId){
-                console.log("True");
-                chrome.tabs.update(tabs[0].id, { url: new_url });
-            }else{
-                console.log("False");
-            }
+        chrome.tabs.query({currentWindow: true}, function(tabs) {
+            tabs.forEach(function(tab) {
+                console.log(tab.url);
+                let currentTab = tab.id;
+                console.log("currentTab - ", currentTab, "activeTab -", activeTabId);
+                console.log("new_url ", new_url);
+    
+                if (currentTab === activeTabId){
+                    console.log("True");
+                    chrome.tabs.update(tab.id, { url: new_url });
+                }else{
+                    console.log("False");
+                }
+            });
         });
     })
     .catch(error => {
