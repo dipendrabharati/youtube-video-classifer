@@ -31,7 +31,7 @@ function updateTimerDisplay() {
     chrome.action.setBadgeText({ text: timeLeft > 0 ? timeLeft.toString() : "" });
     chrome.action.setBadgeBackgroundColor({ color: timeLeft > 0 ? "green" : "red" });
     document.getElementById("timerDisplay").textContent = "Time Left: " + timeLeft + " seconds";
-    document.getElementById("stop").disabled = timeLeft <= 0;
+    // document.getElementById("stop").disabled = timeLeft <= 0;
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
