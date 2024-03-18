@@ -1,40 +1,58 @@
+function startTimer() {
+
+}
 chrome.tabs.onCreated.addListener(function(tab) {
     console.log("Extension Activated");
-    
+
     let prev_url;
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        if (tabs.length > 0) {
-            let activeTabId = tabs[0].id;
+    let activeTabId;
+    let timerStarted = false;
 
-            chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-                let timeLeft;
-                chrome.storage.local.get(["timerDuration", "timerTimeLeft"], function(data) {
-                    if (data.timerTimeLeft > 0) {
-                        timeLeft = data.timerTimeLeft;
-                        console.log("TimeLeft - ", timeLeft);
+    function updateTab(tabId, changeInfo, tab) {
+        let timeLeft;
 
-                        if (changeInfo.url && tabId === activeTabId) {
-                            console.log('Tab URL changed in the active tab\nCurrent Url:', changeInfo.url);
-                            var currentUrl = changeInfo.url;
+        chrome.storage.local.get(["timerDuration", "timerTimeLeft"], function(data) {
+            if (data.timerTimeLeft > 0) {
+                timeLeft = data.timerTimeLeft;
+                console.log("Inside TimeLeft - ", timeLeft);
+                
+                if (changeInfo.url && tabId === activeTabId) {
+                    console.log('Tab URL changed in the active tab\nCurrent Url:', changeInfo.url);
+                    var currentUrl = changeInfo.url;
 
-                            if (prev_url != currentUrl && currentUrl.includes("www.youtube.com/watch")) {
-                                console.log("prev_url -", prev_url, "\ncurrentUrl -", currentUrl);
-                                query_url = "popup.html?new_url="+currentUrl + "&active_tab=" + activeTabId;
-                                chrome.tabs.update(activeTabId, { url: query_url });
-
-                            }else{
-                                console.log("Going through else");
-                            }
-                            prev_url = currentUrl;
-                        }
-                    }else{
-                        console.log("TimeLeft - ", timeLeft);
+                    if (typeof prev_url === 'undefined' && currentUrl.includes("www.youtube.com/watch")){
+                        prev_url = "www.youtube.com";
+                        console.log("prev_url -", prev_url, "\ncurrentUrl -", currentUrl);
                     }
-                });
-            });
+                    // update tab if conditional
+                    if (prev_url != currentUrl && currentUrl.includes("www.youtube.com/watch")) {
+                        console.log("second");
+                        console.log("prev_url -", prev_url, "\ncurrentUrl -", currentUrl);
+                        query_url = "popup.html?new_url="+currentUrl + "&active_tab=" + activeTabId;
+                        chrome.tabs.update(activeTabId, { url: query_url });
+                    } else {
+                        console.log("Going through else");
+                    }
+                    prev_url = currentUrl;
+                }
+            } else {
+                console.log("Outside TimeLeft - ", timeLeft);
+            }
+            
+        });
+    }
+
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        console.log("tab length", tabs.length);
+        if (tabs.length > 0) {
+            activeTabId = tabs[0].id;
+            console.log("activeTabId - ", activeTabId);
+
+            chrome.tabs.onUpdated.addListener(updateTab);
         }
     });
 });
+
 
 let timerInterval;
 let timeLeft = 0;
