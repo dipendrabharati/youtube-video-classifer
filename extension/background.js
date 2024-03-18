@@ -1,13 +1,10 @@
 chrome.tabs.onCreated.addListener(function(tab) {
     console.log("Extension Activated");
-    let count = 0;
-    let prev_url;
     let activeTabId;
-    let timerStarted = false;
 
     function updateTab(tabId, changeInfo, tab) {
         let timeLeft;
-
+        let prev_url;
         chrome.storage.local.get(["timerDuration", "timerTimeLeft"], function(data) {
             if (data.timerTimeLeft > 0) {
                 timeLeft = data.timerTimeLeft;
@@ -26,7 +23,7 @@ chrome.tabs.onCreated.addListener(function(tab) {
                         console.log("Update tab");
                         console.log("prev_url -", prev_url, "\ncurrentUrl -", currentUrl);
                         query_url = "popup.html?new_url="+currentUrl + "&active_tab=" + activeTabId;
-                        chrome.tabs.update(activeTabId, { url: query_url }, function(){});
+                        chrome.tabs.update(activeTabId, { url: query_url });
                         prev_url = currentUrl;
                     } else {
                         console.log("Going through else");

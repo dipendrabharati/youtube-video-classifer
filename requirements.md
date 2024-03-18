@@ -5,7 +5,7 @@
 4. When the user updates the url in the different tab. - Done
 5. When the user stays in the new tab making it active while the url loads or is loading. - Done
 6. When the user moves to a different tab making the newly opened tab inactive. - Done
-7. When the user backs up, the user shouldn't able to play the video.
+7. When the user backs up, the user shouldn't able to play the video. - Done 
 8. When the user clicks on already played video with certain time elapsed. For example - https://www.youtube.com/watch?v=WUvTyaaNkzM&t=4s  - extension loops one more time for this but works.
 9. 
 

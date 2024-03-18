@@ -9,3 +9,7 @@
 
 - `Resolution` - Issue can be resolved temporarily with adding remove listener to the update tab if conditional but extension won't check category for another video. 
   - Resolved using an if conditional.
+
+# Error 3
+- When the user backs up, the user shouldn't able to play the video.
+- `Resolution` - Issue is resolved after inserting prev_url var inside the updateTab function.
