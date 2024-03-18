@@ -1,9 +1,6 @@
-function startTimer() {
-
-}
 chrome.tabs.onCreated.addListener(function(tab) {
     console.log("Extension Activated");
-
+    let count = 0;
     let prev_url;
     let activeTabId;
     let timerStarted = false;
@@ -22,18 +19,19 @@ chrome.tabs.onCreated.addListener(function(tab) {
 
                     if (typeof prev_url === 'undefined' && currentUrl.includes("www.youtube.com/watch")){
                         prev_url = "www.youtube.com";
-                        console.log("prev_url -", prev_url, "\ncurrentUrl -", currentUrl);
+                        console.log("undefined");
                     }
                     // update tab if conditional
-                    if (prev_url != currentUrl && currentUrl.includes("www.youtube.com/watch")) {
-                        console.log("second");
+                    if (prev_url != currentUrl && currentUrl.includes("www.youtube.com/watch") && (!currentUrl.includes("chrome"))) {
+                        console.log("Update tab");
                         console.log("prev_url -", prev_url, "\ncurrentUrl -", currentUrl);
                         query_url = "popup.html?new_url="+currentUrl + "&active_tab=" + activeTabId;
-                        chrome.tabs.update(activeTabId, { url: query_url });
+                        chrome.tabs.update(activeTabId, { url: query_url }, function(){});
+                        prev_url = currentUrl;
                     } else {
                         console.log("Going through else");
+                        prev_url = currentUrl;
                     }
-                    prev_url = currentUrl;
                 }
             } else {
                 console.log("Outside TimeLeft - ", timeLeft);
@@ -47,7 +45,6 @@ chrome.tabs.onCreated.addListener(function(tab) {
         if (tabs.length > 0) {
             activeTabId = tabs[0].id;
             console.log("activeTabId - ", activeTabId);
-
             chrome.tabs.onUpdated.addListener(updateTab);
         }
     });

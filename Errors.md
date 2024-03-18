@@ -8,4 +8,4 @@
   The update tab conditional runs twice before the content.js could even notice the params changes in window.location.
 
 - `Resolution` - Issue can be resolved temporarily with adding remove listener to the update tab if conditional but extension won't check category for another video. 
-  
+  - Resolved using an if conditional.
