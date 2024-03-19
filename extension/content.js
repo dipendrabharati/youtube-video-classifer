@@ -52,6 +52,8 @@
                         if (currentTab === activeTabId){
                             console.log("True");
                             chrome.tabs.update(tab.id, { url: new_url });
+                            // update status
+                            chrome.storage.local.set({ status: true });
                         }else{
                             console.log("False");
                         }
